@@ -1,41 +1,30 @@
-name: Build Android APK
+name: Build APK
 
 on:
   push:
     branches: ["main"]
-  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Récupérer le code
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      # 2. Installer Java (obligatoire Android)
-      - name: Set up JDK 17
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
 
-      # 3. Donner permission au gradlew
-      - name: Grant permission to Gradle
-        run: chmod +x gradlew
-
-      # 4. Vérifier Gradle
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
-      # 5. Build APK
-      - name: Build Debug APK
+      - name: Build APK
         run: ./gradlew assembleDebug
 
-      # 6. Upload APK
-      - name: Upload APK artifact
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: smart-money-ai-apk
+          name: apk
           path: app/build/outputs/apk/debug/app-debug.apk
